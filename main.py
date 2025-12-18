@@ -8,9 +8,9 @@ def next_turn(row, column):
 
     if buttons[row][column]["text"] == "":
         buttons[row][column]["text"] = player
-        buttons[row][column]["font"] = ("Arial", 40, "bold")  # bigger font
-
         buttons[row][column]["state"] = DISABLED
+
+        results[row][column] = player
 
         if player == players[0]:
             player = players[1]
@@ -18,12 +18,68 @@ def next_turn(row, column):
             player = players[0]
 
         turn_label.config(text = player + "' s Turn", fg = players_colour[player])
+        print(results)
+
+    print(winner())
 
     pass
 
 def winner():
 
+    for row in range(len(results)):
+        winner = results[row][0]             # Using the first element of the row, check if the entire row is the same
+        if winner != "":
+            row_win = True                  # Initially set as True as if its wrong, it will set it as false anyways
+            for x in results[row]:
+                if x != winner:
+                    row_win = False
+                    break
+            if row_win:      
+                return winner
+        
+
+    for column in range(len(results[0])):
+        winner = results[0][column]             
+        if winner != "":
+            col_win = True
+            for row in range(len(results)):
+                if results[row][column] != winner:
+                    col_win = False
+                    break
+            if col_win:      
+                return winner
+
+    # Diagonals (Top left to bottom right)
+
+    winner = results[0][0]
+    if winner != "":
+        dia_win =  True
+        for i in range(len(results)):
+            if results[i][i] != winner:
+                dia_win = False
+                break
+
+        if dia_win:
+            return winner
+   
+    # Diagonals (Top right to bottom left)
+
+    winner = results[0][2]
+    if winner != "":
+        dia_win =  True
+        x = len(results[0]) - 1
+
+        for i in range(len(results)):
+            if results[i][x] != winner:
+                dia_win = False
+                break
+            x -= 1
+
+        if dia_win:
+            return winner
+
     pass
+
 
 
 window = Tk()          # instantiates an instance of window 
