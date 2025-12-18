@@ -45,7 +45,6 @@ def winner():
             if row_win:      
                 return winner
         
-
     for column in range(len(results[0])):
         winner = results[0][column]             
         if winner != "":
@@ -109,8 +108,23 @@ def disable_all_buttons():
         for button in row:
             button["state"] = DISABLED
 
+def reset_game():
 
-window = Tk()          # instantiates an instance of window 
+    global player
+
+    for row in range(len(buttons)):
+        for column in range(len(buttons[0])):
+            buttons[row][column].config(text = "")
+            results[row][column] = ""
+            buttons[row][column]["state"] = NORMAL
+
+    
+    player = random.choice(players)
+    turn_label.config(text = player + "' s Turn", fg = players_colour[player])
+
+
+
+window = Tk()          
 
 window.geometry("600x700")
 window.title("TicTacToe")
@@ -145,5 +159,7 @@ for row in range(len(buttons)):
                                       command= lambda row=row, column=column: next_turn(row,column))
         buttons[row][column].grid(row=row, column=column)
 
+reset_button = Button(window, text = "Reset", bg = "red", font = ("Arial", 20), command = reset_game)
+reset_button.pack(side=BOTTOM)
 window.mainloop()
 
