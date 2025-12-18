@@ -20,7 +20,15 @@ def next_turn(row, column):
         turn_label.config(text = player + "' s Turn", fg = players_colour[player])
         print(results)
 
-    print(winner())
+    #print(winner())
+
+    if winner() is not None:
+        turn_label.config(text = winner() + " has Won!", font = ("Arial, 20"), fg = "green")
+        disable_all_buttons()
+
+    if draw():
+        turn_label.config(text = "DRAW", font = ("Arial", 20), fg = "yellow")
+        disable_all_buttons()
 
     pass
 
@@ -77,9 +85,29 @@ def winner():
 
         if dia_win:
             return winner
+        
+    return None
 
     pass
 
+def draw():
+
+    for row in range(len(results)):
+        for column in range(len(results[0])):
+            if results[row][column] == "":
+                return False                    # if any empty spaces then its a draw
+
+    if winner() is None:                          # if winner == None and board is full then draw
+        return True         
+    else:
+        return False
+
+    pass
+
+def disable_all_buttons():
+    for row in buttons:
+        for button in row:
+            button["state"] = DISABLED
 
 
 window = Tk()          # instantiates an instance of window 
