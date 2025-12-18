@@ -18,13 +18,17 @@ def next_turn(row, column):
             player = players[0]
 
         turn_label.config(text = player + "' s Turn", fg = players_colour[player])
-        print(results)
 
     #print(winner())
 
-    if winner() is not None:
-        turn_label.config(text = winner() + " has Won!", font = ("Arial, 20"), fg = "green")
+    player_won, cells = winner()
+
+    if player_won is not None:
+        turn_label.config(text = player_won + " has Won!", font = ("Arial, 20"), fg = "green")
         disable_all_buttons()
+
+        for row, col in cells:
+            buttons[row][col]["bg"] = "#5CE65C"
 
     if draw():
         turn_label.config(text = "DRAW", font = ("Arial", 20), fg = "yellow")
@@ -34,7 +38,8 @@ def next_turn(row, column):
 
 def winner():
 
-    for row in range(len(results)):
+
+    for row in range(len(results)):         # check rows (horizontal)
         winner = results[row][0]             # Using the first element of the row, check if the entire row is the same
         if winner != "":
             row_win = True                  # Initially set as True as if its wrong, it will set it as false anyways
@@ -42,8 +47,12 @@ def winner():
                 if x != winner:
                     row_win = False
                     break
-            if row_win:      
-                return winner
+            if row_win:    
+                winning_cells = []
+                for col in range(len(results[row])):
+                    winning_cells.append((row, col))
+
+                return (winner, winning_cells)
         
     for column in range(len(results[0])):
         winner = results[0][column]             
@@ -54,7 +63,12 @@ def winner():
                     col_win = False
                     break
             if col_win:      
-                return winner
+
+                winning_cells = []
+                for row in range(len(results[row])):
+                    winning_cells.append((row, column))
+
+                return (winner, winning_cells)
 
     # Diagonals (Top left to bottom right)
 
@@ -67,8 +81,11 @@ def winner():
                 break
 
         if dia_win:
-            return winner
-   
+            winning_cells = []
+            for i in range(len(results)):
+                winning_cells.append((i, i))
+
+            return (winner, winning_cells)
     # Diagonals (Top right to bottom left)
 
     winner = results[0][2]
@@ -83,9 +100,16 @@ def winner():
             x -= 1
 
         if dia_win:
-            return winner
+            winning_cells = []
+            x = len(results[0]) - 1
+
+            for i in range(len(results)):
+                winning_cells.append((i, x))
+                x -= 1
+
+            return (winner, winning_cells)
         
-    return None
+    return (None, [])
 
     pass
 
@@ -95,8 +119,11 @@ def draw():
         for column in range(len(results[0])):
             if results[row][column] == "":
                 return False                    # if any empty spaces then its a draw
+            
+    player_won, cells = winner()
 
-    if winner() is None:                          # if winner == None and board is full then draw
+
+    if player_won is None:                          # if winner == None and board is full then draw
         return True         
     else:
         return False
@@ -117,6 +144,8 @@ def reset_game():
             buttons[row][column].config(text = "")
             results[row][column] = ""
             buttons[row][column]["state"] = NORMAL
+            buttons[row][column]["bg"] = "lightgray"
+
 
     
     player = random.choice(players)
