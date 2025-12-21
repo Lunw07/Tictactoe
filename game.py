@@ -190,6 +190,13 @@ def launch_game(mode, size):
     turn_label = Label(window, text = player + "' s Turn", font = ("Arial", 15), fg = players_colour[player])
     turn_label.pack()
 
+    button_frame = Frame(window)
+    button_frame.pack(side=BOTTOM)
+
+    reset_button = Button(window, text = "Reset", bg = "red", font = ("Arial", 20), command = reset_game)
+    reset_button.pack(side=BOTTOM,padx=5, pady= 5)
+    
+
     frame = Frame(window, width = 600, height = 600)
     frame.pack(expand = True, fill = BOTH)
 
@@ -201,9 +208,7 @@ def launch_game(mode, size):
                                         command= lambda row=row, column=column: next_turn(row,column))
             buttons[row][column].grid(row=row, column=column, sticky="nsew")
 
-
-
-    reset_button = Button(window, text = "Reset", bg = "red", font = ("Arial", 20), command = reset_game)
-    reset_button.pack(side=BOTTOM)
     window.mainloop()
+
+
 
