@@ -151,7 +151,8 @@ def reset_game():
     player = random.choice(players)
     turn_label.config(text = player + "' s Turn", fg = players_colour[player])
 
-def launch_game(mode="PVP"):
+
+def launch_game(mode, size):
 
     global window, buttons, results, player, turn_label, players, players_colour
 
@@ -170,14 +171,21 @@ def launch_game(mode="PVP"):
     logo = PhotoImage(file='tictactoe.png')
     window.iconphoto(True, logo)
     window.config(background="lightgray")
+        
 
-    buttons = [[0,0,0],
-            [0,0,0],
-            [0,0,0]]
+    # buttons = [[0,0,0,0],
+    #         [0,0,0,0],
+    #         [0,0,0,0],
+    #         [0,0,0,0]]
 
-    results = [["","",""],
-            ["","",""],
-            ["","",""]]
+    # results = [["","","",""],
+    #         ["","","",""],
+    #         ["","","",""],
+    #         ["","","",""]]
+    
+    buttons = [ [0]* (size) for i in range(size)]
+    results = [ [""]* (size) for i in range(size)]
+
 
     turn_label = Label(window, text = player + "' s Turn", font = ("Arial", 15), fg = players_colour[player])
     turn_label.pack()
