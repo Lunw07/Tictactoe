@@ -1,6 +1,10 @@
 from tkinter import *
 import random
 
+game_mode = "PVP"    
+human_player = "o"
+ai_player = "x"
+
 def next_turn(row, column):
 
     global player
@@ -16,10 +20,21 @@ def next_turn(row, column):
             player = players[1]
         else:
             player = players[0]
+        
+        change_label(player)
+        check_windraw()
 
-        turn_label.config(text = player + "' s Turn", fg = players_colour[player])
+def change_label(current_player):
+    if game_mode == "PVP":
+        turn_label.config(text = player + "' s Turn", fg = players_colour[current_player])
+    else:
+        if current_player == human_player:
+            turn_label.config(text = "Your Turn", fg = players_colour[current_player])
+        else:
+            turn_label.config(text = "AI's Turn", fg = players_colour[current_player])
 
-    #print(winner())
+
+def check_windraw():
 
     player_won, cells = winner()
 
@@ -153,12 +168,6 @@ def reset_game():
 
 def easy_ai():
 
-    if player == "x":
-        turn_label = Label(window, text = "AI' s Turn", font = ("Arial", 15), fg = players_colour[player])
-    else:
-        turn_label = Label(window, text = "Your Turn", font = ("Arial", 15), fg = players_colour[player])
-
-    turn_label.pack()
 
     
     pass
@@ -166,7 +175,10 @@ def easy_ai():
 
 def launch_game(mode, size):
 
-    global window, buttons, results, player, turn_label, players, players_colour
+    global window, buttons, results, player, turn_label, players, players_colour, game_mode
+
+    if mode == "AI":
+        game_mode = "AI"
 
     window = Toplevel()         
 
