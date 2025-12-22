@@ -135,6 +135,7 @@ def disable_all_buttons():
         for button in row:
             button["state"] = DISABLED
 
+
 def reset_game():
 
     global player
@@ -146,16 +147,26 @@ def reset_game():
             buttons[row][column]["state"] = NORMAL
             buttons[row][column]["bg"] = "lightgray"
 
-
-    
     player = random.choice(players)
     turn_label.config(text = player + "' s Turn", fg = players_colour[player])
+
+
+def easy_ai():
+
+    if player == "x":
+        turn_label = Label(window, text = "AI' s Turn", font = ("Arial", 15), fg = players_colour[player])
+    else:
+        turn_label = Label(window, text = "Your Turn", font = ("Arial", 15), fg = players_colour[player])
+
+    turn_label.pack()
+
+    
+    pass
 
 
 def launch_game(mode, size):
 
     global window, buttons, results, player, turn_label, players, players_colour
-
 
     window = Toplevel()         
 
@@ -171,17 +182,6 @@ def launch_game(mode, size):
     logo = PhotoImage(file='tictactoe.png')
     window.iconphoto(True, logo)
     window.config(background="lightgray")
-        
-
-    # buttons = [[0,0,0,0],
-    #         [0,0,0,0],
-    #         [0,0,0,0],
-    #         [0,0,0,0]]
-
-    # results = [["","","",""],
-    #         ["","","",""],
-    #         ["","","",""],
-    #         ["","","",""]]
     
     buttons = [ [0]* (size) for i in range(size)]
     results = [ [""]* (size) for i in range(size)]

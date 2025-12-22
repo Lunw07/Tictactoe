@@ -7,7 +7,7 @@ def start_game(mode, size, window):
     launch_game(mode, size)
     pass
 
-def multiplayer_choice():
+def choose_window(gamemode):
 
     global choice_window
 
@@ -22,17 +22,30 @@ def multiplayer_choice():
     choice_window.columnconfigure((0,1,2), weight=1)  # 3 columns expand equally
     choice_window.rowconfigure(0, weight=1) 
 
-    three_button = Button(choice_window, text="3x3", height=5, width=10, command=lambda: start_game("PVP", 3, choice_window))
-    three_button.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
+    if gamemode == "multi":
 
-    four_button = Button(choice_window, text="4x4", height=5, width=10, command=lambda: start_game("PVP", 4, choice_window))
-    four_button.grid(row=0, column=1, sticky="nsew", padx=2, pady=2)
+        three_button = Button(choice_window, text="3x3", height=5, width=10, command=lambda: start_game("PVP", 3, choice_window))
+        three_button.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
 
-    five_button = Button(choice_window, text="5x5", height=5, width=10, command=lambda: start_game("PVP", 5, choice_window))
-    five_button.grid(row=0, column=2, sticky="nsew", padx=2, pady=2)
+        four_button = Button(choice_window, text="4x4", height=5, width=10, command=lambda: start_game("PVP", 4, choice_window))
+        four_button.grid(row=0, column=1, sticky="nsew", padx=2, pady=2)
 
+        five_button = Button(choice_window, text="5x5", height=5, width=10, command=lambda: start_game("PVP", 5, choice_window))
+        five_button.grid(row=0, column=2, sticky="nsew", padx=2, pady=2)
 
+    elif gamemode == "single":
+        
+        easy_button = Button(choice_window, text="Easy", height=5, width=10, command=lambda: start_game("AI", 3, choice_window))
+        easy_button.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
+
+        medium_button = Button(choice_window, text="Medium", height=5, width=10, command=lambda: start_game("Ai", 3, choice_window))
+        medium_button.grid(row=0, column=1, sticky="nsew", padx=2, pady=2)
+
+        hard_button = Button(choice_window, text="Hard", height=5, width=10, command=lambda: start_game("Ai", 3, choice_window))
+        hard_button.grid(row=0, column=2, sticky="nsew", padx=2, pady=2)
+        
     pass
+
 
 main_window = Tk()          
 
@@ -43,8 +56,8 @@ logo = PhotoImage(file='tictactoe.png')
 main_window.iconphoto(True, logo)
 
 
-multiplayer_button = Button(main_window, text="Multiplayer", height=2, width=30, command=lambda: multiplayer_choice())
-singleplayer_button = Button(main_window, text="Singleplayer", height=2, width=30)
+multiplayer_button = Button(main_window, text="Multiplayer", height=2, width=30, command=lambda: choose_window("multi"))
+singleplayer_button = Button(main_window, text="Singleplayer", height=2, width=30, command= lambda:choose_window("single"))
 
 multiplayer_button.place(relx=0.5, rely=0.37, anchor=CENTER)
 
