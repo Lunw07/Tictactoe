@@ -53,7 +53,6 @@ def check_windraw():
 
 def winner():
 
-
     for row in range(len(results)):         # check rows (horizontal)
         winner = results[row][0]             # Using the first element of the row, check if the entire row is the same
         if winner != "":
@@ -168,6 +167,8 @@ def reset_game():
 
 def easy_ai():
 
+    # if ai turn, select random square (disable button too)
+    # if square already filled in then repeat
 
     
     pass
@@ -198,8 +199,13 @@ def launch_game(mode, size):
     buttons = [ [0]* (size) for i in range(size)]
     results = [ [""]* (size) for i in range(size)]
 
+    if mode == "PVP": turn_label = Label(window, text = player + "' s Turn", font = ("Arial", 15), fg = players_colour[player])
+    else:
+        if player == human_player: 
+            turn_label = Label(window, text = "Your Turn", font = ("Arial", 15), fg = players_colour[player])
+        else:
+            turn_label = Label(window, text = player + "AI' s Turn", font = ("Arial", 15), fg = players_colour[player])
 
-    turn_label = Label(window, text = player + "' s Turn", font = ("Arial", 15), fg = players_colour[player])
     turn_label.pack()
 
     button_frame = Frame(window)
