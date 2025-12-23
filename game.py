@@ -19,11 +19,15 @@ def next_turn(row, column):
         change_label(player)
         check_windraw()
 
-        if game_mode == "AI" and player == ai_player:
-            #easy_ai()
+        player_won, cells = winner()
+
+        if player_won is not None:              # prevents AI from moving after player wins
+            return
+
+        if game_mode == "AI" and player == ai_player:           
             disable_all_buttons()
             window.after(500, lambda: easy_ai())
-            window.after(500, lambda: enable_empty_buttons())
+            window.after(501, lambda: enable_empty_buttons())
 
 def make_move(row, col, p):         # p is player
     buttons[row][col]["text"] = p
@@ -142,13 +146,15 @@ def winner():
 
 def draw():
 
-    for row in range(len(results)):
-        for column in range(len(results[0])):
-            if results[row][column] == "":
-                return False                    # if any empty spaces then its a draw
+    # for row in range(len(results)):
+    #     for column in range(len(results[0])):
+    #         if results[row][column] == "":
+    #             return False                    # if any empty spaces then its a draw
+
+    if any_empty():
+        return False
             
     player_won, cells = winner()
-
 
     if player_won is None:                          # if winner == None and board is full then draw
         return True         
@@ -157,12 +163,20 @@ def draw():
 
     pass
 
+def any_empty():                # True if there is any row with "" in it
+    return any("" in row for row in results)
+
 def disable_all_buttons():
     for row in buttons:
         for button in row:
             button["state"] = DISABLED
 
 def enable_empty_buttons():
+    player_won, cells = winner()
+
+    if player_won is not None:              # prevents AI from moving after player wins
+        return
+
     for row in buttons:
         for button in row:
             if button["text"] == "":
@@ -206,9 +220,7 @@ def easy_ai():
     random_row = random.randint(0, len(results)-1)
     random_col = random.randint(0, len(results[0])-1)
 
-    isdraw = any("" in row for row in results)          # is there any row with "" in it
-
-    while results[random_row][random_col] != "" and isdraw == True:
+    while results[random_row][random_col] != "" and any_empty():
         random_row = random.randint(0, len(results)-1)
         random_col = random.randint(0, len(results[0])-1)
     
