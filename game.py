@@ -5,6 +5,7 @@ import time
 game_mode = "PVP"    
 human_player = "o"
 ai_player = "x"
+ai_difficulty = "e"                 # e = easy, m = medium, h = hard
 
 def next_turn(row, column):
 
@@ -26,8 +27,10 @@ def next_turn(row, column):
         check_windraw()
 
         if game_mode == "AI" and player == ai_player:
-            easy_ai()
-            #window.after(500, easy_ai(player))
+            #easy_ai()
+            disable_all_buttons()
+            window.after(500, lambda: easy_ai())
+            window.after(500, lambda: enable_empty_buttons())
 
 def change_label(current_player):
     if game_mode == "PVP":
@@ -153,6 +156,14 @@ def disable_all_buttons():
         for button in row:
             button["state"] = DISABLED
 
+def enable_empty_buttons():
+    for row in buttons:
+        for button in row:
+            if button["text"] == "":
+                button["state"] = NORMAL
+            else:
+                button["state"] = DISABLED
+
 def reset_game():
 
     global player
@@ -201,7 +212,7 @@ def easy_ai():
     pass
 
 
-def launch_game(mode, size):
+def launch_game(mode, size, difficulty=None):
 
     global window, buttons, results, player, turn_label, players, players_colour, game_mode, frame
 
@@ -243,7 +254,6 @@ def launch_game(mode, size):
     reset_button = Button(window, text = "Reset", bg = "red", font = ("Arial", 20), command = reset_game)
     reset_button.pack(side=BOTTOM,padx=5, pady= 5)
     
-
     frame = Frame(window, width = 600, height = 600)
     frame.pack(expand = True, fill = BOTH)
 
