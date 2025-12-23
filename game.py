@@ -13,16 +13,9 @@ def next_turn(row, column):
     global turn_label
 
     if buttons[row][column]["text"] == "":
-        buttons[row][column]["text"] = player
-        buttons[row][column]["state"] = DISABLED
+        make_move(row, column, player)
 
-        results[row][column] = player
-
-        if player == players[0]:        # if player = "x"
-            player = players[1]
-        else:
-            player = players[0]
-        
+        switch_player()
         change_label(player)
         check_windraw()
 
@@ -31,6 +24,19 @@ def next_turn(row, column):
             disable_all_buttons()
             window.after(500, lambda: easy_ai())
             window.after(500, lambda: enable_empty_buttons())
+
+def make_move(row, col, p):         # p is player
+    buttons[row][col]["text"] = p
+    buttons[row][col]["state"] = DISABLED
+    results[row][col] = p
+
+def switch_player():
+    global player
+
+    if player == players[0]:        # if player = "x"
+        player = players[1]
+    else:
+        player = players[0]
 
 def change_label(current_player):
     if game_mode == "PVP":
@@ -182,7 +188,15 @@ def reset_game():
 
     turn_label.config(text = player + "' s Turn", fg = players_colour[player])
 
+def ai_turn():
+    if ai_difficulty == "e":
+        easy_ai()
+    elif ai_difficulty == "m":
+        pass
+    elif ai_difficulty == "h":
+        pass
 
+    
 def easy_ai():
 
     # if ai turn, select random square (disable button too)
@@ -198,14 +212,9 @@ def easy_ai():
         random_row = random.randint(0, len(results)-1)
         random_col = random.randint(0, len(results[0])-1)
     
+    make_move(random_row, random_col, player)
 
-    buttons[random_row][random_col]["text"] = player
-    buttons[random_row][random_col]["state"] = DISABLED
-    results[random_row][random_col] = player
-
-    player = players[1]                        # change back to players turn
-    #print(player, players)
-
+    switch_player()
     change_label(player)
     check_windraw()
     

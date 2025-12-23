@@ -1,7 +1,7 @@
 from tkinter import *
 from game import launch_game
 
-def start_game(mode, size, difficulty, window):
+def start_game(mode, size, window, difficulty=None):
     window.destroy()
     launch_game(mode, size, difficulty)
     pass
@@ -34,13 +34,13 @@ def choose_window(gamemode):
 
     elif gamemode == "single":
         
-        easy_button = Button(choice_window, text="Easy", height=5, width=10, command=lambda: start_game("AI", 3, "e",choice_window))
+        easy_button = Button(choice_window, text="Easy", height=5, width=10, command=lambda: start_game("AI", 3, choice_window, "e"))
         easy_button.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
 
-        medium_button = Button(choice_window, text="Medium", height=5, width=10, command=lambda: start_game("AI", 3, "m", choice_window))
+        medium_button = Button(choice_window, text="Medium", height=5, width=10, command=lambda: start_game("AI", 3, choice_window, "m"))
         medium_button.grid(row=0, column=1, sticky="nsew", padx=2, pady=2)
 
-        hard_button = Button(choice_window, text="Hard", height=5, width=10, command=lambda: start_game("AI", 3, "h", choice_window))
+        hard_button = Button(choice_window, text="Hard", height=5, width=10, command=lambda: start_game("AI", 3, choice_window, "h"))
         hard_button.grid(row=0, column=2, sticky="nsew", padx=2, pady=2)
         
     pass
