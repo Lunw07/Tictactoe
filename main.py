@@ -46,7 +46,6 @@ def choose_window(gamemode):
         
     pass
 
-
 main_window = Tk()          
 
 main_window.geometry("500x200")

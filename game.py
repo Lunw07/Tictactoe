@@ -1,5 +1,6 @@
 from tkinter import *
 import random
+import time
 
 game_mode = "PVP"    
 human_player = "o"
@@ -16,13 +17,17 @@ def next_turn(row, column):
 
         results[row][column] = player
 
-        if player == players[0]:
+        if player == players[0]:        # if player = "x"
             player = players[1]
         else:
             player = players[0]
         
         change_label(player)
         check_windraw()
+
+        if game_mode == "AI" and player == ai_player:
+            easy_ai()
+            #window.after(500, easy_ai(player))
 
 def change_label(current_player):
     if game_mode == "PVP":
@@ -32,7 +37,6 @@ def change_label(current_player):
             turn_label.config(text = "Your Turn", fg = players_colour[current_player])
         else:
             turn_label.config(text = "AI's Turn", fg = players_colour[current_player])
-
 
 def check_windraw():
 
@@ -149,7 +153,6 @@ def disable_all_buttons():
         for button in row:
             button["state"] = DISABLED
 
-
 def reset_game():
 
     global player
@@ -162,6 +165,10 @@ def reset_game():
             buttons[row][column]["bg"] = "lightgray"
 
     player = random.choice(players)
+
+    if game_mode == "AI" and player == ai_player:
+        easy_ai()
+
     turn_label.config(text = player + "' s Turn", fg = players_colour[player])
 
 
@@ -169,14 +176,34 @@ def easy_ai():
 
     # if ai turn, select random square (disable button too)
     # if square already filled in then repeat
+    global player
 
+    random_row = random.randint(0, len(results)-1)
+    random_col = random.randint(0, len(results[0])-1)
+
+    isdraw = any("" in row for row in results)          # is there any row with "" in it
+
+    while results[random_row][random_col] != "" and isdraw == True:
+        random_row = random.randint(0, len(results)-1)
+        random_col = random.randint(0, len(results[0])-1)
+    
+
+    buttons[random_row][random_col]["text"] = player
+    buttons[random_row][random_col]["state"] = DISABLED
+    results[random_row][random_col] = player
+
+    player = players[1]                        # change back to players turn
+    #print(player, players)
+
+    change_label(player)
+    check_windraw()
     
     pass
 
 
 def launch_game(mode, size):
 
-    global window, buttons, results, player, turn_label, players, players_colour, game_mode
+    global window, buttons, results, player, turn_label, players, players_colour, game_mode, frame
 
     if mode == "AI":
         game_mode = "AI"
@@ -199,12 +226,14 @@ def launch_game(mode, size):
     buttons = [ [0]* (size) for i in range(size)]
     results = [ [""]* (size) for i in range(size)]
 
-    if mode == "PVP": turn_label = Label(window, text = player + "' s Turn", font = ("Arial", 15), fg = players_colour[player])
+
+    if mode == "PVP": 
+        turn_label = Label(window, text = player + "' s Turn", font = ("Arial", 15), fg = players_colour[player])
     else:
         if player == human_player: 
             turn_label = Label(window, text = "Your Turn", font = ("Arial", 15), fg = players_colour[player])
         else:
-            turn_label = Label(window, text = player + "AI' s Turn", font = ("Arial", 15), fg = players_colour[player])
+            turn_label = Label(window, text = "AI' s Turn", font = ("Arial", 15), fg = players_colour[player])
 
     turn_label.pack()
 
@@ -225,6 +254,9 @@ def launch_game(mode, size):
             buttons[row][column] = Button(frame, text="",font=('Arial',40), width=5, height=3,
                                         command= lambda row=row, column=column: next_turn(row,column))
             buttons[row][column].grid(row=row, column=column, sticky="nsew")
+
+    if game_mode == "AI" and player == ai_player:
+        easy_ai()
 
     window.mainloop()
 
