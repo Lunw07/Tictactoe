@@ -26,8 +26,7 @@ def next_turn(row, column):
 
         if game_mode == "AI" and player == ai_player:           
             disable_all_buttons()
-            window.after(500, lambda: easy_ai())
-            window.after(501, lambda: enable_empty_buttons())
+            window.after(500, ai_turn)
 
 def make_move(row, col, p):         # p is player
     buttons[row][col]["text"] = p
@@ -96,7 +95,7 @@ def winner():
             if col_win:      
 
                 winning_cells = []
-                for row in range(len(results[row])):
+                for row in range(len(results)):
                     winning_cells.append((row, column))
 
                 return (winner, winning_cells)
@@ -206,11 +205,15 @@ def ai_turn():
     if ai_difficulty == "e":
         easy_ai()
     elif ai_difficulty == "m":
-        pass
+        medium_ai()
     elif ai_difficulty == "h":
+        hard_ai()
         pass
-
-    
+    else:
+        print("Wrong AI difficulty")
+        return
+    enable_empty_buttons()
+   
 def easy_ai():
 
     # if ai turn, select random square (disable button too)
@@ -232,13 +235,86 @@ def easy_ai():
     
     pass
 
+def medium_ai():
+    pass
+
+def hard_ai():
+    global player
+    move = find_best_move()
+    print(move)
+
+    if move is None:
+        return
+
+    make_move(move[0], move[1], player)
+
+    switch_player()
+    change_label(player)
+    check_windraw()
+
+    pass
+
+def find_best_move():
+
+    global results
+
+    best_score = -float("inf")
+    best_move = None
+
+    for row in range(len(results)):
+        for column in range(len(results[0])):
+            if results[row][column] == "":
+                results[row][column] = ai_player
+                score = minimax(0, False)
+                results[row][column] = ""
+                if score > best_score:
+                    best_score = score
+                    best_move = (row, column)
+    return best_move
+    pass
+
+def minimax(depth, is_maximising):
+
+    global results
+
+
+    if winner()[0] == ai_player:
+        return 1
+    elif winner()[0] == human_player:
+        return -1
+    elif draw():
+        return 0
+    
+    if is_maximising:
+        best_score = -float("inf")
+        for row in range(len(results)):
+            for column in range(len(results[0])):
+                if results[row][column] == "":
+                    results[row][column] = ai_player
+                    score = minimax(depth+1, False)
+                    results[row][column] = ""
+                    best_score = max(best_score, score)
+        return best_score
+    else:
+        best_score = float("inf")
+        for row in range(len(results)):
+            for column in range(len(results[0])):
+                if results[row][column] == "":
+                    results[row][column] = human_player
+                    score = minimax(depth+1, True)
+                    results[row][column] = ""
+                    best_score = min(best_score, score)
+        return best_score
+
+
+    pass
 
 def launch_game(mode, size, difficulty=None):
 
-    global window, buttons, results, player, turn_label, players, players_colour, game_mode, frame
+    global window, buttons, results, player, turn_label, players, players_colour, game_mode, frame, ai_difficulty
 
-    if mode == "AI":
-        game_mode = "AI"
+    game_mode = mode
+    ai_difficulty = difficulty
 
     window = Toplevel()         
 
