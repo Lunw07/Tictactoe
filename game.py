@@ -118,7 +118,7 @@ def winner():
             return (winner, winning_cells)
     # Diagonals (Top right to bottom left)
 
-    winner = results[0][2]
+    winner = results[0][len(results)-1]
     if winner != "":
         dia_win =  True
         x = len(results[0]) - 1
