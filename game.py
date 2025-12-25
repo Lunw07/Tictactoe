@@ -289,6 +289,7 @@ def find_best_move():
 
 def minimax(depth, is_maximising):
 
+
     global results
 
 
@@ -322,6 +323,64 @@ def minimax(depth, is_maximising):
 
 
     pass
+
+def get_line(line, player):
+
+    # If human and ai on same line then can't win on that row/col/diagonal so return 0
+    # if 2 of same player in 1 line: base_score ^ 2
+
+    if "x" in line and "o" in line:
+        return 0
+
+    base_score = 2
+    count = line.count(player)
+
+    score = base_score ** count
+
+    if count == 0:
+        score = 0
+
+    if player == human_player:
+        score = -score
+
+    return score
+
+def get_heuristic(results):
+
+    heuristic = 0
+    store = []
+
+    for row in results:
+        heuristic += get_line(row, "x")
+        heuristic += get_line(row, "o")
+
+
+    for column in range(len(results)):                 #col
+        for row in range(len(results)):
+            store.append(results[row][column])
+        heuristic += get_line(store, "x")
+        heuristic += get_line(store, "o")
+        store.clear()
+
+    store.clear()
+    for i in range(len(results)):                       # top left to bottom right diagonal
+        store.append(results[i][i])
+    heuristic += get_line(store, "x")
+    heuristic += get_line(store, "o")
+
+    store.clear()
+
+    for i in range(len(results)):
+        store.append(results[i][len(results)-1-i])
+    heuristic += get_line(store, "x")
+    heuristic += get_line(store, "o")
+
+    store.clear()
+
+    #print(heuristic)      
+
+    pass
+
 
 def launch_game(mode, size, difficulty=None):
 
