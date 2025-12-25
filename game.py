@@ -250,11 +250,9 @@ def easy_ai():
     pass
 
 def medium_ai():
-    pass
 
-def hard_ai():
     global player
-    move = find_best_move()
+    move = find_best_move(4)
     print(move)
 
     if move is None:
@@ -268,7 +266,23 @@ def hard_ai():
 
     pass
 
-def find_best_move():
+def hard_ai():
+    global player
+    move = find_best_move(None)
+    print(move)
+
+    if move is None:
+        return
+
+    make_move(move[0], move[1], player)
+
+    switch_player()
+    change_label(player)
+    check_windraw()
+
+    pass
+
+def find_best_move(max_depth):
 
     global results
 
@@ -279,7 +293,7 @@ def find_best_move():
         for column in range(len(results[0])):
             if results[row][column] == "":
                 results[row][column] = ai_player
-                score = minimax(0, False)
+                score = minimax(0, False, max_depth)
                 results[row][column] = ""
                 if score > best_score:
                     best_score = score
@@ -287,11 +301,9 @@ def find_best_move():
     return best_move
     pass
 
-def minimax(depth, is_maximising):
-
+def minimax(depth, is_maximising, depth_limit):
 
     global results
-
 
     if winner()[0] == ai_player:
         return 1
@@ -300,13 +312,16 @@ def minimax(depth, is_maximising):
     elif draw():
         return 0
     
+    if depth == depth_limit:
+        return get_heuristic()
+    
     if is_maximising:
         best_score = -float("inf")
         for row in range(len(results)):
             for column in range(len(results[0])):
                 if results[row][column] == "":
                     results[row][column] = ai_player
-                    score = minimax(depth+1, False)
+                    score = minimax(depth+1, False, depth_limit)
                     results[row][column] = ""
                     best_score = max(best_score, score)
         return best_score
@@ -316,7 +331,7 @@ def minimax(depth, is_maximising):
             for column in range(len(results[0])):
                 if results[row][column] == "":
                     results[row][column] = human_player
-                    score = minimax(depth+1, True)
+                    score = minimax(depth+1, True, depth_limit)
                     results[row][column] = ""
                     best_score = min(best_score, score)
         return best_score
@@ -345,7 +360,7 @@ def get_line(line, player):
 
     return score
 
-def get_heuristic(results):
+def get_heuristic():
 
     heuristic = 0
     store = []
@@ -378,6 +393,7 @@ def get_heuristic(results):
     store.clear()
 
     #print(heuristic)      
+    return heuristic
 
     pass
 
