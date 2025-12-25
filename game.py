@@ -8,8 +8,8 @@ ai_player = "x"
 ai_difficulty = "e"                 # e = easy, m = medium, h = hard
 
 game_scores = {
-    "x": 1,
-    "o": 1,
+    "x": 0,
+    "o": 0,
     "draws": 0
 }
 
@@ -59,10 +59,14 @@ def change_label(current_player):
 
 def check_windraw():
 
+
     player_won, cells = winner()
 
     if player_won is not None:
         turn_label.config(text = player_won + " has Won!", font = ("Arial, 20"), fg = "green")
+        game_scores[player_won] += 1
+        stats_label.config(text= str(game_scores["x"]) + "/" + str(game_scores["draws"]) + "/" + str(game_scores["o"]))
+
         disable_all_buttons()
 
         for row, col in cells:
@@ -70,6 +74,9 @@ def check_windraw():
 
     if draw():
         turn_label.config(text = "DRAW", font = ("Arial", 20), fg = "yellow")
+        game_scores["draws"] += 1
+        stats_label.config(text= str(game_scores["x"]) + "/" + str(game_scores["draws"]) + "/" + str(game_scores["o"]))
+        
         disable_all_buttons()
 
     pass
@@ -318,10 +325,16 @@ def minimax(depth, is_maximising):
 
 def launch_game(mode, size, difficulty=None):
 
-    global window, buttons, results, player, turn_label, players, players_colour, game_mode, frame, ai_difficulty
+    global window, buttons, results, player, turn_label, players, players_colour, game_mode, frame, ai_difficulty, stats_label
 
     game_mode = mode
     ai_difficulty = difficulty
+
+    game_scores = {
+    "x": 0,
+    "o": 0,
+    "draws": 0
+    }
 
     window = Toplevel()         
 
@@ -341,7 +354,6 @@ def launch_game(mode, size, difficulty=None):
     buttons = [ [0]* (size) for i in range(size)]
     results = [ [""]* (size) for i in range(size)]
 
-
     if mode == "PVP": 
         turn_label = Label(window, text = player + "' s Turn", font = ("Arial", 15), fg = players_colour[player])
     else:
@@ -355,6 +367,7 @@ def launch_game(mode, size, difficulty=None):
     scores_label = Label(window, text="X/D/O")
     scores_label.pack(side=TOP)
     stats_label = Label(window, text= str(game_scores["x"]) + "/" + str(game_scores["draws"]) + "/" + str(game_scores["o"]))
+    stats_label.pack(side=TOP)
 
 
     button_frame = Frame(window)
