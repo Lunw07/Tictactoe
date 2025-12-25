@@ -1,6 +1,8 @@
 from tkinter import *
 import random
 import time
+from leaderboard import *
+import leaderboard
 
 game_mode = "PVP"    
 human_player = "o"
@@ -64,8 +66,11 @@ def check_windraw():
 
     if player_won is not None:
         turn_label.config(text = player_won + " has Won!", font = ("Arial, 20"), fg = "green")
-        game_scores[player_won] += 1
-        stats_label.config(text= str(game_scores["x"]) + "/" + str(game_scores["draws"]) + "/" + str(game_scores["o"]))
+        #game_scores[player_won] += 1
+        add_win(player_won)
+        stats_label.config(text= str(leaderboard.game_scores["x"]) + "/" + str(leaderboard.game_scores["draws"]) + "/" + str(leaderboard.game_scores["o"]))
+        if game_mode == "AI":
+            save_scores(ai_difficulty)
 
         disable_all_buttons()
 
@@ -74,9 +79,12 @@ def check_windraw():
 
     if draw():
         turn_label.config(text = "DRAW", font = ("Arial", 20), fg = "yellow")
-        game_scores["draws"] += 1
-        stats_label.config(text= str(game_scores["x"]) + "/" + str(game_scores["draws"]) + "/" + str(game_scores["o"]))
-        
+        #game_scores["draws"] += 1
+        add_draw()
+        stats_label.config(text= str(leaderboard.game_scores["x"]) + "/" + str(leaderboard.game_scores["draws"]) + "/" + str(leaderboard.game_scores["o"]))
+        if game_mode == "AI":
+            save_scores(ai_difficulty)
+
         disable_all_buttons()
 
     pass
@@ -398,17 +406,22 @@ def get_heuristic():
     pass
 
 
-def launch_game(mode, size, difficulty=None):
+def launch_game(mode, size, name, difficulty=None):
 
     global window, buttons, results, player, turn_label, players, players_colour, game_mode, frame, ai_difficulty, stats_label
 
     game_mode = mode
     ai_difficulty = difficulty
 
-    game_scores["x"] = 0
-    game_scores["draws"] = 0
-    game_scores["o"] = 0
+    # game_scores["x"] = 0
+    # game_scores["draws"] = 0
+    # game_scores["o"] = 0
 
+    username = name
+    add_name(username)
+
+    reset_scores()
+    #save_scores()
 
     window = Toplevel()         
 
@@ -440,7 +453,7 @@ def launch_game(mode, size, difficulty=None):
 
     scores_label = Label(window, text="X/D/O")
     scores_label.pack(side=TOP)
-    stats_label = Label(window, text= str(game_scores["x"]) + "/" + str(game_scores["draws"]) + "/" + str(game_scores["o"]))
+    stats_label = Label(window, text= str(leaderboard.game_scores["x"]) + "/" + str(leaderboard.game_scores["draws"]) + "/" + str(leaderboard.game_scores["o"]))
     stats_label.pack(side=TOP)
 
 
