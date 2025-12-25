@@ -7,6 +7,13 @@ human_player = "o"
 ai_player = "x"
 ai_difficulty = "e"                 # e = easy, m = medium, h = hard
 
+game_scores = {
+    "x": 1,
+    "o": 1,
+    "draws": 0
+}
+
+
 def next_turn(row, column):
 
     global player
@@ -199,7 +206,7 @@ def reset_game():
     if game_mode == "AI" and player == ai_player:
         easy_ai()
 
-    turn_label.config(text = player + "' s Turn", fg = players_colour[player])
+    turn_label.config(text = player + "' s Turn", fg = players_colour[player], font = ("Arial", 15))
 
 def ai_turn():
     if ai_difficulty == "e":
@@ -344,6 +351,11 @@ def launch_game(mode, size, difficulty=None):
             turn_label = Label(window, text = "AI' s Turn", font = ("Arial", 15), fg = players_colour[player])
 
     turn_label.pack()
+
+    scores_label = Label(window, text="X/D/O")
+    scores_label.pack(side=TOP)
+    stats_label = Label(window, text= str(game_scores["x"]) + "/" + str(game_scores["draws"]) + "/" + str(game_scores["o"]))
+
 
     button_frame = Frame(window)
     button_frame.pack(side=BOTTOM)
