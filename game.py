@@ -330,11 +330,10 @@ def launch_game(mode, size, difficulty=None):
     game_mode = mode
     ai_difficulty = difficulty
 
-    game_scores = {
-    "x": 0,
-    "o": 0,
-    "draws": 0
-    }
+    game_scores["x"] = 0
+    game_scores["draws"] = 0
+    game_scores["o"] = 0
+
 
     window = Toplevel()         
 
